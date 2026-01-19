@@ -2,15 +2,19 @@ require "fileutils"
 require "minitest/autorun"
 require "minitest/reporters"
 require "selenium-webdriver"
+# require "minitest/reporters/junit_reporter"
+require "minitest/junit"
+
+
 
 project_root = File.expand_path("..", __dir__)
 reports_path = File.join(project_root, "reports")
 
-# 2. Clean and create the folder at the absolute project root
+
 FileUtils.rm_rf(reports_path)
 FileUtils.mkdir_p(reports_path)
 
-# 3. Tell the reporter exactly where to go
+
 Minitest::Reporters.use!(
   Minitest::Reporters::JUnitReporter.new(reports_path)
 )
