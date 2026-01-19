@@ -1,23 +1,15 @@
 require 'selenium-webdriver'
 require 'rspec'
 
-describe "BrowserStack Google Test" do
-  it "should open Google and have the correct title" do
-    caps = Selenium::WebDriver::Remote::Capabilities.new
-    caps['browserName'] = 'Chrome'
-    caps['browser_version'] = 'latest'
-    caps['os'] = 'Windows'
-    caps['os_version'] = '10'
-
-    # These come from Jenkins Credentials
-    user = ENV['BS_USERNAME']
-    key = ENV['BS_ACCESS_KEY']
-    url = "https://#{user}:#{key}@hub-cloud.browserstack.com/wd/hub"
-
-    driver = Selenium::WebDriver.for(:remote, url: url, desired_capabilities: caps)
+describe "Google Search" do
+  it "has the correct title" do
+    options = Selenium::WebDriver::Chrome::Options.new
+    # Since this runs in Jenkins, we run 'headless' (no window pops up)
+    options.add_argument('--headless') 
+    driver = Selenium::WebDriver.for :chrome, options: options
     
     driver.navigate.to "https://www.google.com"
-    expect(driver.title).to include("Google")
+    expect(driver.title).to eq("Google")
     
     driver.quit
   end

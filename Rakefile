@@ -1,20 +1,24 @@
-# require 'rspec/core/rake_task'
 
-# RSpec::Core::RakeTask.new(:run_tests) do |t|
-#   t.pattern = 'sample_spec.rb'
-#   t.rspec_opts = '--format progress --format RspecJunitFormatter --out reports/results.xml'
-# end
-
-# task default: :run_tests
 task :run_tests do
-    puts "Running Tests on BrowserStack..."
-    sleep 2
-    
-    Dir.mkdir('reports') unless File.exists?('reports')
-    
+    puts "Running Real RSpec Test..."
+   
+    success = system("bundle exec rspec spec/sample_spec.rb")
+  
+   
+    Dir.mkdir('reports') unless Dir.exist?('reports')
+  
    
     File.open("reports/results.xml", "w") do |f|
-      f.write("<testsuite tests='1'><testcase classname='Google' name='TitleCheck'/></testsuite>")
+      f.write('<?xml version="1.0" encoding="UTF-8"?>')
+      f.write('<testsuite name="RealTests" tests="1">')
+      if success
+        f.write('<testcase classname="Google" name="TitleCheck"/>')
+      else
+        f.write('<testcase classname="Google" name="TitleCheck"><failure message="Title did not match"/></testcase>')
+      end
+      f.write('</testsuite>')
     end
-    puts "Tests Passed! Report created in reports/results.xml"
+    
+    # Ensure the Rake task fails if the test fails so Jenkins knows
+    exit 1 unless success
   end
