@@ -3,33 +3,34 @@ require "minitest/reporters"
 require "selenium-webdriver"
 require "fileutils"
 
-# Create reports folder
+# Ensure reports folder exists
 FileUtils.mkdir_p("reports")
 
-# JUnit Reporter
+# JUnit reporter
 Minitest::Reporters.use!(
   Minitest::Reporters::JUnitReporter.new("reports", single_file: true)
 )
 
 class BrowserStackTest < Minitest::Test
   def test_example_page
-    # BrowserStack capabilities
-    caps = Selenium::WebDriver::Remote::Capabilities.chrome(
-      browser_name: "Chrome",
-      browser_version: "latest",
-      platform_name: "Windows 10",
-      "bstack:options" => {
-        userName: ENV["BROWSERSTACK_USERNAME"],
-        accessKey: ENV["BROWSERSTACK_ACCESS_KEY"],
-        sessionName: "Simple Rake Test"
-      }
-    )
+    username = ENV["BROWSERSTACK_USERNAME"]
+    access_key = ENV["BROWSERSTACK_ACCESS_KEY"]
 
-    # Initialize remote driver
+    # Chrome options object
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_option("bstack:options", {
+      userName: username,
+      accessKey: access_key,
+      sessionName: "Simple Rake Test",
+      os: "Windows",
+      osVersion: "10"
+    })
+
+    # Remote driver
     driver = Selenium::WebDriver.for(
       :remote,
       url: "https://hub.browserstack.com/wd/hub",
-      capabilities: caps
+      capabilities: options
     )
 
     driver.navigate.to("https://example.com")
