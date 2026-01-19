@@ -8,7 +8,7 @@ FileUtils.mkdir_p("reports")
 
 # JUnit reporter
 Minitest::Reporters.use!(
-  Minitest::Reporters::JUnitReporter.new("reports", single_file: true)
+  Minitest::Reporters::JUnitReporter.new("reports/results.xml", single_file: true)
 )
 
 class BrowserStackTest < Minitest::Test
