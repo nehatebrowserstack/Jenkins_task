@@ -1,16 +1,15 @@
+require "fileutils"
 require "minitest/autorun"
 require "minitest/reporters"
 require "selenium-webdriver"
-require "fileutils"
 
 # Ensure reports folder exists
 FileUtils.mkdir_p("reports")
 
-# JUnit reporter
+# JUnit reporter — just the folder path
 Minitest::Reporters.use!(
   Minitest::Reporters::JUnitReporter.new("reports", single_file: true)
 )
-
 class BrowserStackTest < Minitest::Test
   def test_example_page
     username = ENV["BROWSERSTACK_USERNAME"]
