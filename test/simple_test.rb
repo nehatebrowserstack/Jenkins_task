@@ -3,12 +3,16 @@ require "minitest/autorun"
 require "minitest/reporters"
 require "selenium-webdriver"
 
-# Ensure reports folder exists
-FileUtils.mkdir_p("reports")
+project_root = File.expand_path("..", __dir__)
+reports_path = File.join(project_root, "reports")
 
-# JUnit reporter — just the folder path
+# 2. Clean and create the folder at the absolute project root
+FileUtils.rm_rf(reports_path)
+FileUtils.mkdir_p(reports_path)
+
+# 3. Tell the reporter exactly where to go
 Minitest::Reporters.use!(
-  Minitest::Reporters::JUnitReporter.new("reports", single_file: true)
+  Minitest::Reporters::JUnitReporter.new(reports_path)
 )
 class BrowserStackTest < Minitest::Test
   def test_example_page
